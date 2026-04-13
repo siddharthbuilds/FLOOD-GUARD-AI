@@ -6,8 +6,9 @@ geolocator = Nominatim(user_agent="my_location")
 def locate(city):
     location_name = city
     location = geolocator.geocode(location_name)
-
+    print(location)
     if location:
         return [location.latitude, location.longitude]
     else:
         return [0,0]
+locate("Chennai")
