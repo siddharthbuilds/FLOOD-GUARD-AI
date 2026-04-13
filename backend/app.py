@@ -13,7 +13,7 @@ def home():
 
 @app.route('/calculate')
 def calculate():
-     city = request.form.get('city')
+     city = request.get_json('city')
      weather=getweather(city)
      rain=weather[0][0]
      prediction = model.predict_proba(weather)[0][1]
