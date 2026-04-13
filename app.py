@@ -15,7 +15,11 @@ def home():
 def calculate():
      data = request.get_json()
      city=data.get('city')
+     if city is None:
+          return jsonify({"result":"invalid city input is given"},400)
      weather=getweather(city)
+     if weather is None:
+          return jsonify({"result":"weather api failed to get data due to server issue"},400)
      rain=weather[0][0]
      prediction = model.predict_proba(weather)[0][1]
      risk_percent=round(prediction*100,2)
