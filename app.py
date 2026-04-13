@@ -11,9 +11,10 @@ with open('flood_model1.pkl','rb') as f:
 def home():
     return render_template('Home.html')
 
-@app.route('/calculate')
+@app.route('/calculate',methods=['POST'])
 def calculate():
-     city = request.form.get('city')
+     data = request.get_json()
+     city=data.get('city')
      weather=getweather(city)
      rain=weather[0][0]
      prediction = model.predict_proba(weather)[0][1]
