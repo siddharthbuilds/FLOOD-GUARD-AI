@@ -19,7 +19,7 @@ def getweather_coord(lat,lon):
         return None 
 def getweather_city(city):
     lat,lon=locate(city)
-    if lat or lon is None:
+    if lat is None or lon is None:
         return None
     return getweather_coord(lat,lon)
 
