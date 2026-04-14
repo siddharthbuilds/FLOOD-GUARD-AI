@@ -5,7 +5,7 @@ const resultDesc = document.getElementById('risk-desc');
 document.getElementById('predict-btn').addEventListener('click',
     ()=>{
         if (checkEmpty(cityinput.value)){calculate()}
-        else {console.alert('Enter a city to predict')}
+        else {alert('Enter a city to predict');}
     }
 );
 document.getElementById('city-input').addEventListener('keydown',(e)=>{
@@ -37,8 +37,6 @@ fetch('/calculate',{
     if(data.result==='SEVERE RISK!!!'){resultDesc.innerText = "Probability of flooding exceeds 70%. Evacuate low-lying areas.";}
     else if (data.result==='MODERATE RISK!!!'){resultDesc.innerText = "Probability of flooding is less than 70%. Be alert and constantly monitor the weather conditions."}
     else {resultDesc.innerText = 'Probability of flooding is low in your area..'}
-    clearInterval(interval)
-    showResult();
     })
 
     // Hide Input, Show Loader
@@ -55,14 +53,20 @@ fetch('/calculate',{
     ];
 
     let i = 0;
-    const interval = setInterval(() => {
-        if (i < texts.length) {
-            loadingText.innerText = texts[i];
-            i++;
-        }
-    }, 1000);
+    const my_promise = new Promise( (resolve,reject)=>
+    {
+        const interval = setInterval ( ()=> {
+            if (i<texts.length){
+                loadingText.innerText=texts[i];
+                i++;
+            }
+            else{clearInterval(interval);resolve();}
+        },2000)
+    }).then(()=>{showResult();})
 
 };
+
+
 
 function showResult() {
     document.getElementById('loader-section').classList.add('hidden');
