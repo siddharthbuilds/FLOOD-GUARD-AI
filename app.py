@@ -15,16 +15,16 @@ def home():
 def calculate():
      data = request.get_json()
      city=data.get('city')
-     if city is None:
-          return jsonify({"result":"invalid city input is given"},400)
-     elif city:
-          weather=getweather_city(city)
-     else:
+     if data.get('lat') and data.get('lon'):
           lat=data.get('lat')
           lon=data.get('lon')
           if lat or lon is None:
                return None
           weather=getweather_coord(lat,lon)
+     elif data.get('city'):
+          weather=getweather_city(city)
+     else:
+          return jsonify({"result":"invalid city input is given"}),400
      if weather is None:
           return jsonify({"result":"Server error ,unable to fetch api"}),400
      rain=weather[0][0]
