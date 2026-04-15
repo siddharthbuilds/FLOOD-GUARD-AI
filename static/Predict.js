@@ -1,9 +1,17 @@
 const cityinput = document.getElementById('city-input');
 const resultTitle = document.getElementById('risk-value');
 const resultDesc = document.getElementById('risk-desc');
-
+let selectedLat = null;
+let selectedLon = null;
 document.getElementById('predict-btn').addEventListener('click',
-   ()=> {calculate();} 
+
+    
+
+    
+        if (checkEmpty(city_ip.value)){calculate()}
+        else {alert('Enter a city to predict')}
+ 
+
 );
 document.getElementById('city-input').addEventListener('keydown',(e)=>{
     if (e.key=='Enter'){calculate();}
@@ -21,7 +29,10 @@ fetch('/calculate',{
     headers: {
         "Content-Type":"application/json"
     },
+
     body: JSON.stringify(requestData)
+
+    body: JSON.stringify(selectedLat ? {lat: selectedLat, lon: selectedLon} : {city: city})
     }
     )
     .then(response=> {
@@ -83,6 +94,7 @@ function showResult() {
     
 }
 
+
 const map = L.map('map-btn').setView([20.5937, 78.9629], 5);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; OpenStreetMap &copy; CARTO'
@@ -101,13 +113,22 @@ let selectedLon = null;
 
 map.on('click', function(e) {
     // In C terms, 'e' is like a pointer to the event data structure
-    selectedLat = e.latlng.lat;
-    selectedLon = e.latlng.lng;
+  selectedLat = e.latlng.lat;
+  selectedLon = e.latlng.lng;
 
 cityinput.value = `📍 ${selectedLat.toFixed(4)}, ${selectedLon.toFixed(4)}`;
 if (currentMarker) {
-        currentMarker.setLatLng(e.latlng); // Move existing
-    } else {
-        currentMarker = L.marker(e.latlng, { icon: waterDropIcon }).addTo(map); // Create new
-    }
+      currentMarker.setLatLng(e.latlng); // Move existing
+  } else {
+      currentMarker = L.marker(e.latlng, { icon: waterDropIcon }).addTo(map); // Create new
+  }
+
+const map = L.map('map-btn').setView([20.5937, 78.9629], 4);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+map.on('click', function(e) {
+  selectedLat = e.latlng.lat;
+  selectedLon = e.latlng.lng;
+  city_ip.value = `📍 ${selectedLat.toFixed(4)}, ${selectedLon.toFixed(4)}`;
+
 });
