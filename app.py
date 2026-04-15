@@ -18,8 +18,6 @@ def calculate():
      if data.get('lat') and data.get('lon'):
           lat=data.get('lat')
           lon=data.get('lon')
-          if lat or lon is None:
-               return None
           weather=getweather_coord(lat,lon)
      elif data.get('city'):
           weather=getweather_city(city)
