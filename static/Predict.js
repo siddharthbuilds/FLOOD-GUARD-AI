@@ -11,6 +11,7 @@ document.getElementById('city-input').addEventListener('keydown',(e)=>{
 
 
 function calculate(){
+let controlLoad=0;
 const requestData = (selectedLat && selectedLon)
 ?{'lat':selectedLat,'lon':selectedLon}
 :{'city':cityinput.value}
@@ -27,11 +28,22 @@ fetch('/calculate',{
         return response.json();
     })
     .then(data=>{
-    resultTitle.innerText = data.result;
+    if (data.ok)
+        {    resultTitle.innerText = data.result;
 
-    if(data.result==='SEVERE RISK!!!'){resultDesc.innerText = "Probability of flooding exceeds 70%. Evacuate low-lying areas.";}
-    else if (data.result==='MODERATE RISK!!!'){resultDesc.innerText = "Probability of flooding is less than 70%. Be alert and constantly monitor the weather conditions."}
-    else {resultDesc.innerText = 'Probability of flooding is low in your area..'}
+            if(data.result==='SEVERE RISK!!!'){resultDesc.innerText = "Probability of flooding exceeds 70%. Evacuate low-lying areas.";}
+            else if (data.result==='MODERATE RISK!!!'){resultDesc.innerText = "Probability of flooding is less than 70%. Be alert and constantly monitor the weather conditions."}
+            else {resultDesc.innerText = 'Probability of flooding is low in your area..'}
+        }
+    else
+        {
+            if (data.type === 1)
+            {
+                controlLoad=1;
+                resultTitle.innerText = data.result;
+            }
+            else {controlLoad=2;resultTitle.innerText = data.result;}
+        }
     })
 
     // Hide Input, Show Loader
@@ -54,6 +66,8 @@ fetch('/calculate',{
             if (i<texts.length){
                 loadingText.innerText=texts[i];
                 i++;
+                if (controlLoad === 1) {clearInterval(interval);resolve();}
+                else if (controlLoad === 2 && i==3) {clearInterval(interval);resolve();}
             }
             else{clearInterval(interval);resolve();}
         },1500)
